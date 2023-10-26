@@ -142,4 +142,10 @@ __Pattern matching in Seneca__
 Pattern matching is one of the most flexible software patterns that you can use for microservices.  
 
 __Patrun pattern-matching library__  
-It is used by Seneca in order to execute the pattern matching and decide which service should respond to the call.  
+It is used by Seneca in order to execute the pattern matching and decide which service should respond to the call.
+
+__Reusing patterns__  
+Patrun always tries to match the closest and most concrete pattern that it can find with the following two dimensions:
+* The longest chain of matches
+* The order of the patterns
+It will always try to find the best fit, and if there is an ambiguity, it will match the first pattern found.  
