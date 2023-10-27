@@ -1,0 +1,32 @@
+fuge_global:
+  tail: true
+  monitor_excludes:
+    - '**/node_modules/**'
+    - '**/.git/**'
+    - '**/*.log'
+    - '**/data/**'
+web:
+  type: node
+  path: ../../web/srv
+  run: node web-dev.js --seneca.options.legacy.transport=false
+search:
+  type: node
+  path: ../../search/srv
+  run: node search-dev.js --seneca.options.legacy.transport=false
+info:
+  type: node
+  path: ../../info/srv
+  run: node info-dev.js --seneca.options.legacy.transport=false
+npm:
+  type: node
+  path: ../../npm/srv
+  run: node npm-dev.js --seneca.options.legacy.transport=false
+github:
+  type: node
+  path: ../../github/srv
+  run: node github-dev.js --seneca.options.legacy.transport=false
+suggest:
+  type: node
+  path: ../../suggest/srv
+  run: node suggest-dev.js --seneca.options.legacy.transport=false
+

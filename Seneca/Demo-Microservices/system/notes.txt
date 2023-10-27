@@ -1,0 +1,58 @@
+
+git clone --branch v0.8.0 https://github.com/etsy/statsd.git v0.8.0
+
+
+# https://github.com/hopsoft/docker-graphite-statsd
+docker run -d --restart=always -p 8100:80 -p 2003-2004:2003-2004 -p 2023-2024:2023-2024 -p 8125:8125/udp  -p 8126:8126  hopsoft/graphite-statsd
+
+docker run -d --restart=always -p 8100:80 -p 2003-2004:2003-2004 -p 2023-2024:2023-2024 -p 8125:8125/udp  -p 8126:8126  nodezoo-graphite-statsd
+
+
+docker run -d -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:5.2.2
+
+
+
+
+# stage
+
+# need swarm for overlay network
+$ docker swarm init
+$ docker network create --driver overlay nodezoo 
+$ docker network ls
+
+$ docker service create --name web --network nodezoo --publish 8000:8000 nodezoo-web
+$ docker service create --name search --network nodezoo --env ELASTIC=elastic nodezoo-search
+$ docker service create --name suggest --network nodezoo nodezoo-suggest
+$ docker service create --name info --network nodezoo nodezoo-info
+$ docker service create --name npm --network nodezoo nodezoo-npm
+$ docker service create --name github --network nodezoo nodezoo-github
+$ docker service create --name repl --network nodezoo --publish 9000:9000 --publish 10000:10000 nodezoo-repl
+$ docker service create --name validate --network nodezoo --publish 11000:11000 --env SYSTEM_HOST=repl --env STATS_HOST=stats nodezoo-validate
+
+
+$ docker service create --name elastic --network nodezoo --env xpack.security.enabled=false docker.elastic.co/elasticsearch/elasticsearch:5.2.2
+
+$ docker service create --name stats --network nodezoo --publish 8100:80 --publish 2003-2004:2003-2004 --publish 2023-2024:2023-2024 --publish 8125:8125/udp  --publish 8126:8126 nodezoo-graphite-statsd
+
+$ curl 'http://localhost:11000/act?role=validate&cmd=validate'
+
+$ docker service create --name redis --network nodezoo --publish 6379:6379 redis
+
+$ docker stack deploy -c prod/nodezoo.yml nodezoo
+
+
+
+
+
+docker service create --name nodezoo_web --network nodezoo_nodezoo --publish 8000:8000 --log-driver syslog --log-opt syslog-address=udp://192.168.0.101:5000 nodezoo-web:1
+
+
+
+
+# kubernetes
+
+minikube start
+
+minikube ssh
+
+
